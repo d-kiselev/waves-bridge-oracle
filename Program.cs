@@ -10,7 +10,7 @@ namespace wavesbridgeoracle
         public static void Main(string[] args)
         {
             var node = new Node(Node.TestNetChainId);
-            var nodeInOtherChain = new Node("https://nodes-stagenet.wavesnodes.com/", 'S');
+            var nodeInOtherChain = new Node("https://stagenet-aws-fr-1.wavesnodes.com/", 'S');
 
             var oracleSeed = "void entire theme slam explain seed take purity craft away cake month layer napkin nasty";
             var oracle = PrivateKeyAccount.CreateFromSeed(oracleSeed, node.ChainId);
@@ -20,9 +20,9 @@ namespace wavesbridgeoracle
             {
                 try
                 {
-                    var height = nodeInOtherChain.GetHeight();
-                    var merkleRoot = nodeInOtherChain.GetMerkleRootAtHeight(height - 15);
-                    var key = height.ToString() + "_merkleRoot";
+                    var height = nodeInOtherChain.GetHeight() - 15;
+                    var merkleRoot = nodeInOtherChain.GetMerkleRootAtHeight(height);
+                    var key = height.ToString() + "_transactionsRoot";
 
                     if (!node.GetAddressData(oracle.Address).ContainsKey(key))
                     {
@@ -47,7 +47,7 @@ namespace wavesbridgeoracle
     {
         public static string GetMerkleRootAtHeight(this Node node, int height)
         {
-            return node.GetObject($"blocks/headers/at/{height}").GetString("generator"); // .GetString("txMerkleRoot");
+            return node.GetObject($"blocks/headers/at/{height}").GetString("transactionsRoot");
         }
     }
 }
