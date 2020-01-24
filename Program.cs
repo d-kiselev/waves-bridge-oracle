@@ -20,7 +20,7 @@ namespace wavesbridgeoracle
             {
                 try
                 {
-                    var height = nodeInOtherChain.GetHeight() - 15;
+                    var height = nodeInOtherChain.GetHeight() - 1;
                     var merkleRoot = nodeInOtherChain.GetMerkleRootAtHeight(height);
                     var key = height.ToString() + "_transactionsRoot";
 
@@ -45,9 +45,9 @@ namespace wavesbridgeoracle
 
     static class NodeExtentions
     {
-        public static string GetMerkleRootAtHeight(this Node node, int height)
+        public static byte[] GetMerkleRootAtHeight(this Node node, int height)
         {
-            return node.GetObject($"blocks/headers/at/{height}").GetString("transactionsRoot");
+            return node.GetObject($"blocks/headers/at/{height}").GetString("transactionsRoot").FromBase58();
         }
     }
 }
